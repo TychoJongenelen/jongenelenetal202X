@@ -1,38 +1,23 @@
 #%% Importing necessary libraries
-import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import os
 
-# Adding paths to custom scripts
-sys.path.extend(['/home/jongenet/jongenet/scripts/a_load_flux_measurements/',
-                 '/home/jongenet/jongenet/scripts/p_scripts_paper1/pF_functions',
-                 '/home/jongenet/jongenet/scripts/p_scripts_paper1/pF_functions/MonteCarlo'])
+#Change to your desired directory:
+os.chdir('/home/jongenet/jongenelenetal202X/figure_scripts/')
+savefig_fp = "../figures/"
+data_fp = "../model_output/"
+def linear_regression(x, y):
+    # Perform linear regression
+    slope, intercept, r, _, _ = linregress(x.dropna(), y.dropna())
+    return slope, intercept, r
 
-# Importing custom scripts
-from pM00_run_models import solleveld_run_MC
-from a01_load_solleveld_data import load_solleveld_data
-from pF_functions import add_missing_datetime_rows, preprocessing_baserun
-savefig_fp = "/home/jongenet/jongenet/scripts_new/c_papers/c_paper_1/cb_figure_scripts/"
 
 # %%2.Initialize measurement and model data
-solleveld_data = load_solleveld_data()
-
-baserun = solleveld_run_MC(MC_switch=True,
-                            LAI_scaling=True,
-                            LAI_scaling_min=0.5,
-                            LAI_scaling_max=1.0,
-                            enforce_soil_pathway=False)
-
-datetimes = solleveld_data['datetime']
-DEPAC_baserun = pd.DataFrame(baserun['DEPAC'], columns=baserun['DEPAC_keys'])
-massad_baserun = pd.DataFrame(baserun['massad'], columns=baserun['massad_keys'])
-zhang_baserun = pd.DataFrame(baserun['zhang'], columns=baserun['zhang_keys'])
-u_star_mask = DEPAC_baserun['u_star'] > 0.1
-
-DEPAC_baserun = preprocessing_baserun(DEPAC_baserun, u_star_mask, solleveld_data)
-massad_baserun = preprocessing_baserun(massad_baserun, u_star_mask, solleveld_data)
-zhang_baserun = preprocessing_baserun(zhang_baserun, u_star_mask, solleveld_data)
+DEPAC_baserun = pd.read_json(data_fp+"DEPAC_output.json", orient='records', lines=True)
+massad_baserun = pd.read_json(data_fp+"massad_output.json", orient='records', lines=True)
+zhang_baserun = pd.read_json(data_fp+"zhang_output.json", orient='records', lines=True)
 model_dict = {"DEPAC" : DEPAC_baserun, "Massad": massad_baserun, "Zhang" : zhang_baserun}
 
 #%%Make hourly averaged figure

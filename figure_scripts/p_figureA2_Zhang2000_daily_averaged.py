@@ -1,67 +1,27 @@
-#Make accumulated plot with the original Zhang Gamma_soil = 2000 value
-
 #%% Importing necessary libraries
-import sys
 import numpy as np
 import pandas as pd
-from scipy.stats import pearsonr
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+from scipy.stats import linregress
+
 import matplotlib.pyplot as plt
-import tqdm as tqdm
 import os
+#Change to your desired directory:
+os.chdir('/home/jongenet/jongenelenetal202X/figure_scripts/')
 
-# Adding paths to custom scripts
-sys.path.extend(['/home/jongenet/jongenet/scripts/a_load_flux_measurements/',
-                 '/home/jongenet/jongenet/scripts/p_scripts_paper1/pF_functions',
-                 '/home/jongenet/jongenet/scripts/p_scripts_paper1/pF_functions/MonteCarlo'])
-savefig_fp = "/home/jongenet/jongenet/scripts_new/c_papers/c_paper_1/cb_figure_scripts/"
-# Importing custom scripts
-from pM00_run_models import solleveld_run_MC
-from a01_load_solleveld_data import load_solleveld_data
-from pF_functions import add_missing_datetime_rows, preprocessing_baserun
-savefig_fp = "/home/jongenet/jongenet/scripts_new/c_papers/c_paper_1/cb_figure_scripts/"
-# %%2.Initialize measurement and model data, and also run the zhang gamma_g = 2000 data
-solleveld_data = load_solleveld_data()
+savefig_fp = "../figures/"
+data_fp = "../model_output/"
 
-baserun = solleveld_run_MC(MC_switch=False,
-                            LAI_scaling=True,
-                            LAI_scaling_min=0.5,
-                            LAI_scaling_max=1.0,
-                            enforce_soil_pathway=False)
-zhang2000 = solleveld_run_MC(MC_switch=False,
-                            LAI_scaling=True,
-                            LAI_scaling_min=0.5,
-                            LAI_scaling_max=1.0,
-                            enforce_soil_pathway=False,
-                            run_DEPAC = False,
-                            run_massad = False,
-                            gamma_g_Z_i = 2000)
 
-run_betatemp = solleveld_run_MC(MC_switch=True,
-                            LAI_scaling=True,
-                            LAI_scaling_min=0.5,
-                            LAI_scaling_max=1.0,
-                            enforce_soil_pathway=False,
-                            add_massad_betaTemp = True,
-                            run_massad = False,
-                            run_zhang = False)
+# %%2.Initialize measurement and model data
+DEPAC_baserun = pd.read_json(data_fp+"DEPAC_output.json", orient='records', lines=True)
+massad_baserun = pd.read_json(data_fp+"massad_output.json", orient='records', lines=True)
+zhang_baserun = pd.read_json(data_fp+"zhang_output.json", orient='records', lines=True)
+zhang2000 = pd.read_json(data_fp+"zhang_original_output.json", orient='records', lines=True)
 
-datetimes = solleveld_data['datetime']
-DEPAC_baserun = pd.DataFrame(baserun['DEPAC'], columns=baserun['DEPAC_keys'])
-massad_baserun = pd.DataFrame(baserun['massad'], columns=baserun['massad_keys'])
-zhang_baserun = pd.DataFrame(baserun['zhang'], columns=baserun['zhang_keys'])
-zhang2000 = pd.DataFrame(zhang2000['zhang'], columns=baserun['zhang_keys'])
-depac_betatemp = pd.DataFrame(run_betatemp['DEPAC'], columns=baserun['DEPAC_keys'])
-u_star_mask = DEPAC_baserun['u_star'] > 0.1
-
-DEPAC_baserun = preprocessing_baserun(DEPAC_baserun, u_star_mask, solleveld_data)
-massad_baserun = preprocessing_baserun(massad_baserun, u_star_mask, solleveld_data)
-zhang_baserun = preprocessing_baserun(zhang_baserun, u_star_mask, solleveld_data)
-zhang2000 = preprocessing_baserun(zhang2000, u_star_mask, solleveld_data)
-depac_betatemp = preprocessing_baserun(depac_betatemp, u_star_mask, solleveld_data)
 DEPAC_baserun.index = DEPAC_baserun['datetime']
 massad_baserun.index = massad_baserun['datetime']
 zhang_baserun.index = zhang_baserun['datetime']
+zhang2000.index = zhang2000['datetime']
 #%%Make monthly averaged figure
 #Standard font sizes
 title_font = 14

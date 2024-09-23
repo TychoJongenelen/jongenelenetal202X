@@ -2,9 +2,12 @@
 import numpy as np
 import pandas as pd
 from scipy.stats import linregress
+import os
 
+#Change to your desired directory:
+os.chdir('/home/jongenet/jongenelenetal202X/figure_scripts/')
 savefig_fp = "../figures/"
-data_fp = "../model_output"
+data_fp = "../model_output/"
 def linear_regression(x, y):
     # Perform linear regression
     slope, intercept, r, _, _ = linregress(x.dropna(), y.dropna())

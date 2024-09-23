@@ -1,62 +1,28 @@
 #%% Importing necessary libraries
-#%% Importing necessary libraries
-import sys
 import numpy as np
 import pandas as pd
-from scipy.stats import pearsonr
-from sklearn.metrics import mean_absolute_error, mean_squared_error
+
 import matplotlib.pyplot as plt
 
-# Adding paths to custom scripts
-sys.path.extend(['/home/jongenet/jongenet/scripts/a_load_flux_measurements/',
-                 '/home/jongenet/jongenet/scripts/p_scripts_paper1/pF_functions',
-                 '/home/jongenet/jongenet/scripts/p_scripts_paper1/pF_functions/MonteCarlo'])
 
-# Importing custom scripts
-from pM00_run_models import solleveld_run_MC
-from a01_load_solleveld_data import load_solleveld_data
-from pF_functions import preprocessing_baserun
-savefig_fp = "/home/jongenet/jongenet/scripts_new/c_papers/c_paper_1/cb_figure_scripts/"
+#%% Importing necessary libraries
+import numpy as np
+import pandas as pd
+from scipy.stats import linregress
+import os
+
+#Change to your desired directory:
+os.chdir('/home/jongenet/jongenelenetal202X/figure_scripts/')
+savefig_fp = "../figures/"
+data_fp = "../model_output/"
+
 
 # %%2.Initialize measurement and model data
-solleveld_data = load_solleveld_data()
-
-baserun = solleveld_run_MC(MC_switch=False,
-                            LAI_scaling=True,
-                            LAI_scaling_min=0.5,
-                            LAI_scaling_max=1.0,
-                            enforce_soil_pathway=False)
-
-datetimes = solleveld_data['datetime']
-DEPAC_baserun = pd.DataFrame(baserun['DEPAC'], columns=baserun['DEPAC_keys'])
-massad_baserun = pd.DataFrame(baserun['massad'], columns=baserun['massad_keys'])
-zhang_baserun = pd.DataFrame(baserun['zhang'], columns=baserun['zhang_keys'])
-u_star_mask = DEPAC_baserun['u_star'] > 0.1
-
-DEPAC_baserun = preprocessing_baserun(DEPAC_baserun, u_star_mask, solleveld_data)
-massad_baserun = preprocessing_baserun(massad_baserun, u_star_mask, solleveld_data)
-zhang_baserun = preprocessing_baserun(zhang_baserun, u_star_mask, solleveld_data)
+DEPAC_baserun = pd.read_json(data_fp+"DEPAC_output.json", orient='records', lines=True)
+massad_baserun = pd.read_json(data_fp+"massad_output.json", orient='records', lines=True)
+zhang_baserun = pd.read_json(data_fp+"zhang_output.json", orient='records', lines=True)
 model_dict = {"DEPAC" : DEPAC_baserun, "Massad": massad_baserun, "Zhang" : zhang_baserun}
 
-
-#%%3. Plot accumulated fluxes with 95% CI
-#Import the 95%CI data per model
-filepath_MC_result = "/home/jongenet/jongenet/scripts_new/c_papers/c_paper_1/cc_output_data/MC_results/"
-def get_95CI(var):
-    CI_dct = {}
-    for model in ['DEPAC', 'massad', 'zhang']:
-        CI025 = pd.read_csv(filepath_MC_result + f"{model}_mc_025.csv")
-        CI975 = pd.read_csv(filepath_MC_result + f"{model}_mc_975.csv")
-        CI025 = preprocessing_baserun(CI025, u_star_mask, solleveld_data)
-        CI975 = preprocessing_baserun(CI975, u_star_mask, solleveld_data)
-        CI025 = CI025[var]
-        CI975 = CI975[var]
-        if model != 'DEPAC':
-            model = model.capitalize()
-        CI_dct[f"{model}_CI025"] = CI025
-        CI_dct[f"{model}_CI975"] = CI975
-    
-    return(CI_dct)
 
 #%%Make detailed plot
 varnames_dct = {'DEPAC': ['flux_tot', 'flux_stom', 'flux_w','hour', 'conc', 'canopy_comp_point', \
@@ -75,9 +41,6 @@ color_fs = 'tab:orange'
 color_fw = 'tab:green'
 color_fsoil = 'tab:brown'
 
-#New
-import matplotlib.pyplot as plt
-import numpy as np
 #Standard font sizes
 title_font = 14
 label_font = 10
@@ -208,3 +171,5 @@ plt.savefig(f"{savefig_fp}fig05.png", format='png', dpi=800)
 plt.show()
 
 
+
+# %%
