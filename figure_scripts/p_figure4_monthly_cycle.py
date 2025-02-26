@@ -1,13 +1,20 @@
 #%% Importing necessary libraries
-import numpy as np
 import pandas as pd
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 import os
-#Change to your desired directory:
-os.chdir('/home/jongenet/jongenelenetal202X/figure_scripts/')
+
+# Set `directory_name` to the absolute path of your `/figure_scripts/` directory.
+# Example: directory_name = "/path/to/your/project/figure_scripts/"
+directory_name = ""
+if directory_name == "":
+    raise ValueError("Please specify the directory_name variable ")
+else:
+    os.chdir(directory_name)
+    
 savefig_fp = "../figures/"
 data_fp = "../model_output/"
+
 def linear_regression(x, y):
     # Perform linear regression
     slope, intercept, r, _, _ = linregress(x.dropna(), y.dropna())
@@ -15,50 +22,33 @@ def linear_regression(x, y):
 
 
 # %%2.Initialize measurement and model data
-DEPAC_baserun = pd.read_json(data_fp+"DEPAC_output.json", orient='records', lines=True)
-massad_baserun = pd.read_json(data_fp+"massad_output.json", orient='records', lines=True)
-zhang_baserun = pd.read_json(data_fp+"zhang_output.json", orient='records', lines=True)
+models = ['DEPAC', 'massad', 'zhang']
+baseruns = {}
+
+for model in models:
+    baseruns[model] = pd.read_json(f"{data_fp}{model}_output.json", orient='records', lines=True, convert_dates=False)
+    baseruns[model]['datetime'] = pd.to_datetime(baseruns[model]['datetime'], unit='ms')
+    baseruns[model].set_index('datetime', inplace=True)
+
+# Access individual datasets:
+DEPAC_baserun = baseruns['DEPAC']
+massad_baserun = baseruns['massad']
+zhang_baserun = baseruns['zhang']
+
 model_dict = {"DEPAC" : DEPAC_baserun, "Massad": massad_baserun, "Zhang" : zhang_baserun}
 
 #%%Make monthly averaged figure
-#Standard font sizes
-title_font = 14
-label_font = 10
-legend_font = 10
-text_font = 12
+label_fontsize = 9
+legend_fontsize = 9
+title_fontsize = 11
 grid_alpha = 0.3
-
-hexbinplot_config = {
-    'mincnt' :1, 
-    'gridsize' : 30, 
-    'edgecolor' :'none'
-    }
-abclabel_config = {
-    'fontsize' : text_font,
-    'fontweight' : 'bold',
-    'verticalalignment' : 'top'
-    }
-
-oneline_config = {
-    'linestyle' :'--', 
-    'linewidth' :1, 
-    'label' : '1:1'
-    }
-
-legend_config = {
-    'loc' : 'upper right',
-    'fontsize' : legend_font
-    }
-
-subplot_title_config = {
-    'fontweight' :'bold', 
-    'fontsize' : title_font
-    }
-
-#Plot figure
-fig, ax = plt.subplots(1, 3, figsize=(3*4, 4*1), sharey=True)
-
 offset = 0.2  # Offset for the observed boxplots
+
+y_label = r"$\text{F}_{\text{tot}}$ (ng m$^{-2}$ s$^{-1}$)"
+mod_label = r"$\text{F}_{\text{tot, mod}}$"
+obs_label = r"$\text{F}_{\text{tot, obs}}$"
+
+fig, ax = plt.subplots(1, 3, figsize=(7.3, 2.5), sharey=True)
 
 for i, (model_name, model) in enumerate(model_dict.items()):
     # Group by month and collect flux_tot and NH3_flux_obs data, dropping NaN values
@@ -88,25 +78,25 @@ for i, (model_name, model) in enumerate(model_dict.items()):
     # Additional layout
     ax[i].grid(alpha=grid_alpha)
     ax[i].set_xticks(range(1, 13))
-    ax[i].set_xticklabels(range(1, 13))
-    ax[i].set_title(model_name, **subplot_title_config)
-    ax[i].set_xlabel("Month", fontsize=label_font)
+    ax[i].set_title(model_name, fontsize=title_fontsize, fontweight='bold')
+    ax[i].set_xlabel("Month", fontsize=label_fontsize)
+    ax[i].tick_params(axis='both', which='major', labelsize=label_fontsize)
 
-ax[0].set_ylabel("Flux in ng m$^{-2}$ s$^{-1}$")
+ax[0].set_ylabel(y_label, fontsize=label_fontsize)
 
 # Add legend
 handles = [bp_mod["boxes"][0], bp_obs["boxes"][0]]
-labels = ['Modelled $F_{tot}$', 'Observed $F_{tot}$']
-fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.54, -0.07), ncol=2)
+labels = [mod_label, obs_label]
+fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.55, -0.10), ncol=2)
 
-# Add axis labels
-labels1 = ['a)', 'b)', 'c)']
+# Add subplot labels
+labels = ['a)', 'b)', 'c)']
 for i, axi in enumerate(ax.flat):
-    axi.text(0.02, 0.98, labels1[i], transform=axi.transAxes, **abclabel_config)
+    axi.text(0.02, 0.90, labels[i], transform=axi.transAxes, fontsize=label_fontsize)
 
 plt.tight_layout()
 plt.savefig(f"{savefig_fp}fig04.pdf", format='pdf', dpi=300, bbox_inches='tight')
-plt.savefig(f"{savefig_fp}fig04.png", format='png', dpi=800, bbox_inches='tight')
+plt.savefig(f"{savefig_fp}fig04.png", format='png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # %%

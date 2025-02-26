@@ -1,0 +1,42 @@
+Monte Carlo Simulation Output
+=============================
+
+----------------------------------------------------------------------
+Variable Name         | Unit                  | Description
+----------------------------------------------------------------------
+
+# NH₃ FLUXES
+flux_tot             | ng m⁻² s⁻¹            | Total NH₃ flux (net exchange)
+flux_stom            | ng m⁻² s⁻¹            | NH₃ flux to/from stomata
+flux_w               | ng m⁻² s⁻¹            | NH₃ flux to/from wet surfaces
+flux_soil            | ng m⁻² s⁻¹            | NH₃ flux to/from soil surface
+
+# CUMULATIVE FLUXES
+cumflux_obs          | kg NH3 ha⁻¹           | Observed cumulative NH₃ flux
+cumflux_mod          | kg NH3 ha⁻¹           | Modeled cumulative NH₃ flux
+
+# TIME VARIABLE
+datetime             | ms since 1970-01-01   | Timestamp in Unix epoch time (milliseconds)
+
+----------------------------------------------------------------------
+
+File Naming Convention:
+- The Monte Carlo output files follow the format:  
+  `{model}_mc_{percentile}`  
+  Example: `DEPAC_mc_025`, `DEPAC_mc_975`
+  
+- `{model}` represents the model name, such as `DEPAC`, `massad`, or `zhang`.
+- `{percentile}` indicates the percentile of the distribution:
+  - **025** represents the 2.5th percentile (lower bound of the confidence interval).
+  - **975** represents the 97.5th percentile (upper bound of the confidence interval).
+
+----------------------------------------------------------------------
+
+Notes:
+- NH₃ fluxes are expressed in **nanograms per square meter per second (ng m⁻² s⁻¹)**.
+- Cumulative NH₃ fluxes are given in **kilograms per hectare (kg NH₃ ha⁻¹)**.
+- The **datetime** field represents a Unix timestamp in **milliseconds** since January 1, 1970 (UTC).
+  This format is processed within the scripts located in `/figure_scripts/`.
+- The sum of the compartment-specific fluxes (`flux_stom`, `flux_w`, `flux_soil`) does not necessarily match 
+  `flux_tot`. This discrepancy arises because the datasets represent percentile-based values rather than 
+  direct summations.

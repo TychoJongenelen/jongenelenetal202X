@@ -1,0 +1,157 @@
+=======================================
+DEPAC scheme output - DEPAC_output.json
+=======================================
+----------------------------------------------------------------------
+Variable Name         | Unit             | Description
+----------------------------------------------------------------------
+# RESISTANCES
+r_a                  | s m⁻¹             | Aerodynamic resistance 
+r_b                  | s m⁻¹             | Quasi-laminar boundary layer resistance
+r_c                  | s m⁻¹             | Canopy resistance 
+r_inc                | s m⁻¹             | In-canopy resistance
+r_soil_eff           | s m⁻¹             | Effective soil resistance
+r_s                  | s m⁻¹             | Stomatal resistance
+r_w                  | s m⁻¹             | External resistance
+
+# COMPENSATION POINTS
+total_comp_point     | μg m⁻³            | Total canopy compensation point 
+ext_comp_point       | μg m⁻³            | External (non-stomatal) compensation point
+stom_comp_point      | μg m⁻³            | Stomatal compensation point 
+soil_comp_point      | μg m⁻³            | Soil compensation point
+canopy_comp_point    | μg m⁻³            | Bulk canopy compensation point 
+
+# NH₃ CONCENTRATION
+NH3_conc             | μg m⁻³            | Atmospheric NH₃ concentration
+
+# TIME VARIABLES
+hour                 | -                 | Hour of the day (0-23)
+day                  | -                 | Day of the month
+month                | -                 | Month of the year
+year                 | -                 | Year of observation
+datetime             | -                 | Timestamp of measurement
+
+# NH₃ FLUXES
+flux_tot             | ng m⁻² s⁻¹        | Total NH₃ flux (net exchange)
+flux_w               | ng m⁻² s⁻¹        | NH₃ flux to/from wet surfaces
+flux_soil            | ng m⁻² s⁻¹        | NH₃ flux to soil surface
+flux_stom            | ng m⁻² s⁻¹        | NH₃ flux to/from stomata
+
+# EMISSION POTENTIALS
+gamma_stom           | -                 | Stomatal emission potential (dimensionless)
+gamma_w              | -                 | External emission potential (dimensionless)
+gamma_soil           | -                 | Soil emission potential (dimensionless)
+
+# OBSERVED NH₃ FLUX
+NH3_flux_obs         | ng m⁻² s⁻¹        | Observed NH₃ flux
+
+# CUMULATIVE FLUXES
+cumflux_mod          | kg NH3 ha⁻¹       | Modeled cumulative NH₃ flux
+cumflux_obs          | kg NH3 ha⁻¹       | Observed cumulative NH₃ flux
+
+# OTHER VARIABLES
+LAI                  | -                 | Leaf Area Index (dimensionless)
+
+
+=======================================
+Massad scheme output - massad_output.json
+=======================================
+----------------------------------------------------------------------
+Variable Name         | Unit             | Description
+----------------------------------------------------------------------
+# RESISTANCES
+r_a                  | s m⁻¹             | Aerodynamic resistance to NH₃ transport
+r_b                  | s m⁻¹             | Quasi-laminar boundary layer resistance
+r_c                  | s m⁻¹             | Canopy resistance 
+r_bg                 | s m⁻¹             | Soil resistance
+r_ac                 | s m⁻¹             | In-canopy resistance
+r_g                  | s m⁻¹             | Effective soil resistance
+r_w                  | s m⁻¹             | External resistance
+r_s                  | s m⁻¹             | Soil surface resistance
+
+# COMPENSATION POINTS
+chi_z0               | μg m⁻³            | Compensation point at roughness height
+chi_c                | μg m⁻³            | Canopy compensation point 
+chi_g                | μg m⁻³            | Soil compensation point
+chi_stom             | μg m⁻³            | Stomatal  compensation point
+
+# NH₃ CONCENTRATION
+NH3_conc             | μg m⁻³            | Atmospheric NH₃ concentration
+
+# TIME VARIABLES
+hour                 | -                 | Hour of the day (0-23)
+day                  | -                 | Day of the month
+month                | -                 | Month of the year
+year                 | -                 | Year of observation
+datetime             |ms since 1970-01-01| Timestamp in Unix epoch time (milliseconds)
+
+# NH₃ FLUXES
+flux_tot             | ng m⁻² s⁻¹        | Total NH₃ flux (net exchange)
+flux_w               | ng m⁻² s⁻¹        | NH₃ flux to/from wet surfaces
+flux_soil            | ng m⁻² s⁻¹        | NH₃ flux to/from soil surface
+flux_stom            | ng m⁻² s⁻¹        | NH₃ flux to/from stomata
+
+# EMISSION POTENTIALS
+gamma_stom           | -                 | Stomatal emission potential (dimensionless)
+gamma_g              | -                 | Ground-level emission potential (dimensionless)
+
+# OBSERVED NH₃ FLUX
+NH3_flux_obs         | ng m⁻² s⁻¹        | Observed NH₃ flux
+
+# CUMULATIVE FLUXES
+cumflux_mod          | kg NH3 ha⁻¹       | Modeled cumulative NH₃ flux
+cumflux_obs          | kg NH3 ha⁻¹       | Observed cumulative NH₃ flux
+
+# OTHER VARIABLES
+LAI                  | -                 | Leaf Area Index (dimensionless)
+
+
+=======================================
+Zhang scheme output - zhang_output.json
+=======================================
+----------------------------------------------------------------------
+Variable Name         | Unit             | Description
+----------------------------------------------------------------------
+# RESISTANCES
+r_a                  | s m⁻¹             | Aerodynamic resistance 
+r_b                  | s m⁻¹             | Quasi-laminar boundary layer resistance
+r_soil               | s m⁻¹             | Soil resistance
+r_ac                 | s m⁻¹             | In-canopy resistance
+r_soil_eff           | s m⁻¹             | Effective soil resistance
+r_w                  | s m⁻¹             | External resistance
+r_s                  | s m⁻¹             | Stomatal resistance
+
+# COMPENSATION POINTS
+chi_c                | μg m⁻³            | Canopy compensation point
+chi_soil             | μg m⁻³            | Soil  compensation point
+chi_stom             | μg m⁻³            | Stomatal  compensation point
+
+# NH₃ CONCENTRATION
+NH3_conc             | μg m⁻³            | Atmospheric NH₃ concentration
+
+# TIME VARIABLES
+hour                 | -                 | Hour of the day (0-23)
+day                  | -                 | Day of the month
+month                | -                 | Month of the year
+year                 | -                 | Year of observation
+datetime             |ms since 1970-01-01| Timestamp in Unix epoch time (milliseconds)
+
+# NH₃ FLUXES
+flux_tot             | ng m⁻² s⁻¹        | Total NH₃ flux (net exchange)
+flux_w               | ng m⁻² s⁻¹        | NH₃ flux to/from wet surfaces
+flux_soil            | ng m⁻² s⁻¹        | NH₃ flux to/from soil surface
+flux_stom            | ng m⁻² s⁻¹        | NH₃ flux to/from stomata
+
+# EMISSION POTENTIALS
+gamma_stom           | -                 | Stomatal emission potential (dimensionless)
+gamma_soil           | -                 | Soil emission potential (dimensionless)
+
+# OBSERVED NH₃ FLUX
+NH3_flux_obs         | ng m⁻² s⁻¹        | Observed NH₃ flux
+
+# CUMULATIVE FLUXES
+cumflux_mod          | kg NH3 ha⁻¹       | Modeled cumulative NH₃ flux
+cumflux_obs          | kg NH3 ha⁻¹       | Observed cumulative NH₃ flux
+
+# OTHER VARIABLES
+LAI                  | -                 | Leaf Area Index (dimensionless)
+

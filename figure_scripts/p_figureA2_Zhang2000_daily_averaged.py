@@ -1,101 +1,66 @@
 #%% Importing necessary libraries
 import numpy as np
 import pandas as pd
-from scipy.stats import linregress
-
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import os
-#Change to your desired directory:
-os.chdir('/home/jongenet/jongenelenetal202X/figure_scripts/')
+
+# Set `directory_name` to the absolute path of your `/figure_scripts/` directory.
+# Example: directory_name = "/path/to/your/project/figure_scripts/"
+directory_name = ""
+if directory_name == "":
+    raise ValueError("Please specify the directory_name variable ")
+else:
+    os.chdir(directory_name)
+    
 
 savefig_fp = "../figures/"
 data_fp = "../model_output/"
 
 
 # %%2.Initialize measurement and model data
-DEPAC_baserun = pd.read_json(data_fp+"DEPAC_output.json", orient='records', lines=True)
-massad_baserun = pd.read_json(data_fp+"massad_output.json", orient='records', lines=True)
-zhang_baserun = pd.read_json(data_fp+"zhang_output.json", orient='records', lines=True)
-zhang2000 = pd.read_json(data_fp+"zhang_original_output.json", orient='records', lines=True)
+models = ['DEPAC', 'massad', 'zhang', 'zhang_original']
+baseruns = {}
 
-DEPAC_baserun.index = DEPAC_baserun['datetime']
-massad_baserun.index = massad_baserun['datetime']
-zhang_baserun.index = zhang_baserun['datetime']
-zhang2000.index = zhang2000['datetime']
+for model in models:
+    baseruns[model] = pd.read_json(f"{data_fp}{model}_output.json", orient='records', lines=True, convert_dates=False)
+    baseruns[model]['datetime'] = pd.to_datetime(baseruns[model]['datetime'], unit='ms')
+    baseruns[model].set_index('datetime', inplace=True)
+
+# Access individual datasets:
+DEPAC_baserun = baseruns['DEPAC']
+massad_baserun = baseruns['massad']
+zhang_baserun = baseruns['zhang']
+zhang_original = baseruns['zhang_original']
 #%%Make monthly averaged figure
-#Standard font sizes
-title_font = 14
-label_font = 10
-legend_font = 10
-text_font = 12
+label_fontsize = 9
+legend_fontsize = 9
+title_fontsize = 11
 grid_alpha = 0.3
+lw_plot = 1.5
 
-hexbinplot_config = {
-    'mincnt' :1, 
-    'gridsize' : 30, 
-    'edgecolor' :'none'
-    }
-abclabel_config = {
-    'fontsize' : text_font,
-    'fontweight' : 'bold',
-    'verticalalignment' : 'top'
-    }
+label = r'F$_{\mathrm{tot}}$: '
+zhang2000_label = label + r'Zhang, Γ$_{\mathrm{soil}}$ = 2000 '
+fig, ax = plt.subplots(1, figsize=(7.3,4))
+plt.plot(DEPAC_baserun['cumflux_mod'], label=label + 'DEPAC', color='tab:blue', linewidth = lw_plot)
+plt.plot(massad_baserun['cumflux_mod'], label=label + 'Massad', color='tab:orange', linewidth = lw_plot)
+plt.plot(zhang_baserun['cumflux_mod'], label=label +'Zhang', color='tab:green', linewidth = lw_plot)
+plt.plot(zhang_original['cumflux_mod'], label=zhang2000_label, color='tab:purple', linewidth = lw_plot)
+plt.plot(DEPAC_baserun['cumflux_obs'], label=label + "GRAHAM", color='black', linewidth = lw_plot)
+plt.ylabel("Σ NH$_{3}$ in kg ha$^{-1}$")
+plt.legend(loc='lower center', ncol=3, bbox_to_anchor=(0.50, -0.33), fontsize=legend_fontsize, frameon=True)
 
-oneline_config = {
-    'linestyle' :'--', 
-    'linewidth' :1, 
-    'label' : '1:1'
-    }
-
-legend_config = {
-    'loc' : 'upper right',
-    'fontsize' : legend_font
-    }
-
-subplot_title_config = {
-    'fontweight' :'bold', 
-    'fontsize' : title_font
-    }
-
-#Plot figure
-model_dict = {"DEPAC" : DEPAC_baserun, "Massad": massad_baserun, "Zhang" : zhang_baserun, "Zhang2000" : zhang2000}
-model_dict_zhang = {"Zhang" : zhang_baserun, "Zhang with Γ$_{soil}$ = 2000" : zhang2000}
-fig, ax = plt.subplots(1, 2, figsize=(8,4), sharey=True)
-
-for i, (model_name, model) in enumerate(model_dict_zhang.items()):
-    # Calculate hourly averaged mod and obs + IQR
-    hour_mean_mod = model[['flux_tot', 'hour']].groupby('hour').mean()
-    hour_mean_mod_25 = model[['flux_tot', 'hour']].groupby('hour').quantile(0.25)['flux_tot']
-    hour_mean_mod_75 = model[['flux_tot', 'hour']].groupby('hour').quantile(0.75)['flux_tot']
-    hour_mean_obs = model[['NH3_flux_obs', 'hour']].groupby('hour').mean()
-    hour_mean_obs_25 = model[['NH3_flux_obs', 'hour']].groupby('hour').quantile(0.25)['NH3_flux_obs']
-    hour_mean_obs_75 = model[['NH3_flux_obs', 'hour']].groupby('hour').quantile(0.75)['NH3_flux_obs']
-    
-    # Plot model and observed data with IQR shading
-    ax[i].plot(hour_mean_mod.index, hour_mean_mod, color='tab:blue', label='Modeled $F_{tot}$', linewidth=2)
-    ax[i].plot(hour_mean_obs.index, hour_mean_obs, color='tab:orange', label='Observed $F_{tot}$', linewidth=2)
-    ax[i].fill_between(hour_mean_mod.index, y1=hour_mean_mod_25, y2=hour_mean_mod_75, color='tab:blue', alpha=0.3, zorder=3)
-    ax[i].fill_between(hour_mean_mod.index, y1=hour_mean_obs_25, y2=hour_mean_obs_75, color='tab:orange', alpha=0.3, zorder=3)
-    
-    # Additional layout improvements
-    ax[i].grid(alpha=grid_alpha)
-    ax[i].set_xticks(hour_mean_mod.index[::3])
-    ax[i].set_title(model_name, **subplot_title_config)
-    ax[i].set_xlabel("Hour (UTC)", fontsize=label_font)
-    ax[i].tick_params(axis='both', which='major', labelsize=10)
-
-ax[0].set_ylabel("Flux in ng m$^{-2}$ s$^{-1}$", fontsize=label_font)
-
-# Consolidate legend into a single, centralized legend
-handles, labels = ax[1].get_legend_handles_labels()
-legend = fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(0.5, -0.08), ncol=2, fontsize=legend_font)
-
-# Add subplot labels
-labels = ['a)', 'b)']
-for i, axi in enumerate(ax.flat):
-    axi.text(0.02, 0.98, labels[i], transform=axi.transAxes, **abclabel_config)
-
+#Fix the months
+# Format the x-axis to show month and year
+plt.gca().xaxis.set_major_locator(mdates.MonthLocator(interval=2))  # Locator for each month
+plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%b-%Y')) 
+plt.ylim(-1.5, 0.25)
+plt.xticks(fontsize=label_fontsize)
+plt.yticks(np.arange(-1.5, 0.50, step=0.25), fontsize=label_fontsize)
+plt.grid(alpha=grid_alpha)
 plt.tight_layout()
-plt.savefig(f"{savefig_fp}figA02.pdf", format='pdf', dpi=300)
-plt.savefig(f"{savefig_fp}figA02.png", format='png', dpi=800)
+plt.savefig(f"{savefig_fp}fig06.pdf", format='pdf', dpi=300, bbox_inches='tight')
+plt.savefig(f"{savefig_fp}fig06.png", format='png', dpi=300, bbox_inches='tight')
 plt.show()
+
+# %%
