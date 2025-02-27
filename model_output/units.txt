@@ -59,7 +59,7 @@ Massad scheme output - massad_output.json
 Variable Name         | Unit             | Description
 ----------------------------------------------------------------------
 # RESISTANCES
-r_a                  | s m⁻¹             | Aerodynamic resistance to NH₃ transport
+r_a                  | s m⁻¹             | Aerodynamic resistance
 r_b                  | s m⁻¹             | Quasi-laminar boundary layer resistance
 r_c                  | s m⁻¹             | Canopy resistance 
 r_bg                 | s m⁻¹             | Soil resistance
