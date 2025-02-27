@@ -1,8 +1,13 @@
-#%% Importing necessary libraries
+#%%1. Importing necessary libraries
 import pandas as pd
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 import os
+
+def linear_regression(x, y):
+    # Perform linear regression
+    slope, intercept, r, _, _ = linregress(x.dropna(), y.dropna())
+    return slope, intercept, r
 
 # Set `directory_name` to the absolute path of your `/figure_scripts/` directory.
 # Example: directory_name = "/path/to/your/project/figure_scripts/"
@@ -14,14 +19,7 @@ else:
     
 savefig_fp = "../figures/"
 data_fp = "../model_output/"
-
-def linear_regression(x, y):
-    # Perform linear regression
-    slope, intercept, r, _, _ = linregress(x.dropna(), y.dropna())
-    return slope, intercept, r
-
-
-# %%2.Initialize measurement and model data
+#%%2.Initialize measurement and model data
 models = ['DEPAC', 'massad', 'zhang']
 baseruns = {}
 
@@ -37,7 +35,7 @@ zhang_baserun = baseruns['zhang']
 
 model_dict = {"DEPAC" : DEPAC_baserun, "Massad": massad_baserun, "Zhang" : zhang_baserun}
 
-#%%Make monthly averaged figure
+#%%3.Make monthly averaged figure
 label_fontsize = 9
 legend_fontsize = 9
 title_fontsize = 11

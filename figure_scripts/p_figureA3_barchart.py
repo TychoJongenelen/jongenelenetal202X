@@ -1,4 +1,4 @@
-#%% Importing necessary libraries
+#%%1. Importing necessary libraries
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -12,13 +12,12 @@ if directory_name == "":
 else:
     os.chdir(directory_name)
     
-
 savefig_fp = "../figures/"
 data_fp = "../model_output/"
 mc_fp = "../uncertainty_analysis_output/"
 
 
-# %%2.Initialize measurement and model data
+#%%2.Initialize measurement and model data
 models = ['DEPAC', 'massad', 'zhang', 'zhang_original']
 baseruns = {}
 
@@ -47,7 +46,7 @@ acc_stom = [D_stom, M_stom, Z_stom]  # Values for D_stom, M_stom, Z_stom
 acc_w = [D_w, M_w, Z_w]      # Values for D_w, M_w, Z_w
 acc_soil = [D_g, M_g, Z_g]    # Values for D_soil, M_soil, Z_soil
 
-#%% Create the stacked bar chart
+#%%3. Create the stacked bar chart
 label_fontsize = 9
 legend_fontsize = 9 #Changed here
 title_fontsize = 11

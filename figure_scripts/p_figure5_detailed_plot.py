@@ -1,4 +1,4 @@
-#%% Importing necessary libraries
+#%%1. Importing necessary libraries
 import numpy as np
 import pandas as pd
 import os
@@ -31,7 +31,7 @@ massad_baserun = baseruns['massad']
 zhang_baserun = baseruns['zhang']
 
 
-#%%Make detailed plot
+#%%3. Make detailed plot
 #Some models use different names for variables, that has to be dealt with when making the plot
 varnames_dct = {
     'DEPAC': ['flux_tot', 'flux_stom', 'flux_w', 'hour', 'NH3_conc', 'canopy_comp_point',

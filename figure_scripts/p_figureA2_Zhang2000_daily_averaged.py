@@ -1,4 +1,4 @@
-#%% Importing necessary libraries
+#%%1. Importing necessary libraries
 import numpy as np
 import pandas as pd
 import matplotlib.dates as mdates
@@ -13,12 +13,11 @@ if directory_name == "":
 else:
     os.chdir(directory_name)
     
-
 savefig_fp = "../figures/"
 data_fp = "../model_output/"
 
 
-# %%2.Initialize measurement and model data
+#%%2.Initialize measurement and model data
 models = ['DEPAC', 'massad', 'zhang', 'zhang_original']
 baseruns = {}
 
@@ -32,7 +31,7 @@ DEPAC_baserun = baseruns['DEPAC']
 massad_baserun = baseruns['massad']
 zhang_baserun = baseruns['zhang']
 zhang_original = baseruns['zhang_original']
-#%%Make monthly averaged figure
+#%%3. Make monthly averaged figure
 label_fontsize = 9
 legend_fontsize = 9
 title_fontsize = 11

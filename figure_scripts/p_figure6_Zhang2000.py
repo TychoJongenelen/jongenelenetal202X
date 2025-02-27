@@ -1,4 +1,4 @@
-#%% Importing necessary libraries
+#%%1. Importing necessary libraries
 import os
 import numpy as np
 import pandas as pd
@@ -16,7 +16,7 @@ else:
 savefig_fp = "../figures/"
 data_fp = "../model_output/"
 
-# %%2.Initialize measurement and model data
+#%%2.Initialize measurement and model data
 models = ['DEPAC', 'massad', 'zhang', 'zhang_original']
 baseruns = {}
 

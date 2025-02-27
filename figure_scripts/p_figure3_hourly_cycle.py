@@ -1,4 +1,4 @@
-#%% Importing necessary libraries
+#%%1. Importing necessary libraries
 import pandas as pd
 import matplotlib.pyplot as plt
 import os
@@ -14,7 +14,7 @@ else:
 savefig_fp = "../figures/"
 data_fp = "../model_output/"
 
-# %%2.Initialize measurement and model data
+#%%2.Initialize measurement and model data
 models = ['DEPAC', 'massad', 'zhang']
 baseruns = {}
 
@@ -30,7 +30,7 @@ zhang_baserun = baseruns['zhang']
 
 model_dict = {"DEPAC" : DEPAC_baserun, "Massad": massad_baserun, "Zhang" : zhang_baserun}
 
-#%%Make hourly averaged figure
+#%%3. Make hourly averaged figure
 label_fontsize = 9
 legend_fontsize = 10 #Changed here
 title_fontsize = 11

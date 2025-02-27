@@ -1,4 +1,4 @@
-#%% Importing necessary libraries
+#%%1. Importing necessary libraries
 import os
 import numpy as np
 import pandas as pd
@@ -14,13 +14,12 @@ if directory_name == "":
 else:
     os.chdir(directory_name)
     
-
 savefig_fp = "../figures/"
 data_fp = "../model_output/"
 mc_fp = "../uncertainty_analysis_output/"
 
 
-# %%2.Initialize measurement and model data
+#%%2.Initialize measurement and model data
 models = ['DEPAC', 'massad', 'zhang', 'zhang_original']
 mc_95CI_runs = ['DEPAC_mc_025', 'DEPAC_mc_975', 'massad_mc_025', 'massad_mc_975', 'zhang_mc_025', 'zhang_mc_975']
 baseruns = {}
@@ -62,7 +61,7 @@ dataframes = {'DEPAC_baserun': DEPAC_baserun,
             }
 
 
-#%% Accumulation plot with the error bars
+#%%3. Accumulation plot with the error bars
 label_fontsize = 9
 legend_fontsize = 9
 title_fontsize = 11

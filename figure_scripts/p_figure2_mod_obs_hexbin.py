@@ -1,4 +1,4 @@
-#%% Importing necessary libraries
+#%%1. Importing necessary libraries
 import numpy as np
 import pandas as pd
 from scipy.stats import linregress
@@ -38,7 +38,7 @@ zhang_baserun = baseruns['zhang']
 
 
 model_dict = {"DEPAC" : DEPAC_baserun, "Massad": massad_baserun, "Zhang" : zhang_baserun}
-#%%Scatterplot: Model versus observations 
+#%%S3. catterplot: Model versus observations 
 
 label_fontsize = 9
 legend_fontsize = 9
